@@ -115,7 +115,7 @@ This function registers an `Injectable` or `InjectionToken` with the injector.
 | Argument | Type | Description | Required |
 | --- | --- | --- | --- |
 | `type` | `Injectable` or `InjectionToken` | The type of the injectable. | `true` |
-| `source` | `Node` | The node in which to start the search up the tree. | `true` |
+| `source` | `Node` or `"root"` | The node in which to start the search up the tree. Defaults to `"root"`. | `false
 | `parameters` | `Array` or `Variant` | An array of parameters to pass to the `Injectable` (an array is only needed for 2 or more parameters) or a value for an `InjectionToken`. Defaults to `null`. | `false` |
 
 ```php
@@ -141,7 +141,7 @@ This function finds the `Injectable` or `InjectionToken` that was registered wit
 | Argument | Type | Description | Required |
 | --- | --- | --- | --- |
 | `type` | `Injectable` or `InjectionToken` | The type of the injectable. | `true` |
-| `source` | `Node` | The node in which to start the search up the tree. | `true` |
+| `source` | `Node` or `"root"` | The node in which to start the search up the tree. Defaults to `"root"`. | `false` |
 | `multi` | `bool` | If true, an array of all injectables found will be returned. Defaults to `false`. | `false` |
 
 ```php
