@@ -31,9 +31,7 @@ static func provides(type: Variant, source: Variant = 'root', parameters: Varian
 		return null
 
 	if source is String and source == 'root':
-		print(Engine.get_main_loop())
 		source = Engine.get_main_loop().root
-		print(source)
 	# Get the current injectables on the node.
 	var meta: Array = source.get_meta(META_NAME, [])
 	meta.push_back(klass)
