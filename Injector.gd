@@ -6,12 +6,12 @@ static var META_NAME: String = '__injectables__'
 ## * [type] is the injectable class to provide. This can be an instance of Injectable or InjectionToken.
 ## * [source] is the node to add the provider data to. This usually is set to [self] but can be any node.
 ## * [parameters] is an array of parameters to pass to the Injectable's constructor. If the [type] is an InjectionToken, this is the value to inject, such as a [Node], [String], [Int], etc.
-static func provides(type: Variant, source: Variant = 'root', parameters: Variant = null) -> Variant:
+static func provide(type: Variant, source: Variant = 'root', parameters: Variant = null) -> Variant:
 	var klass: Variant
 
 	if !(source is Node) and (source is String and source != 'root'):
-		printerr('Injectable.provides: "source" must be a Node or "root".')
-		push_error('Injectable.provides: "source" must be a Node or "root".')
+		printerr('Injectable.provide: "source" must be a Node or "root".')
+		push_error('Injectable.provide: "source" must be a Node or "root".')
 		return null
 
 	if type is InjectionToken or type is String:
@@ -25,9 +25,8 @@ static func provides(type: Variant, source: Variant = 'root', parameters: Varian
 				params.push_back(parameters)
 		klass =	type.callv('new', params)
 
-
 	if !is_instance_of(klass, Injectable) and !is_instance_of(type, InjectionToken) and !(type is String):
-		printerr('Injectable.provides: "type" must be an instance of Injectable, InjectionToken, or String.')
+		printerr('Injectable.provide: "type" must be an instance of Injectable, InjectionToken, or String.')
 		return null
 
 	if source is String and source == 'root':

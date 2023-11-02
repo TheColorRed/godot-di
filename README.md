@@ -4,7 +4,7 @@
     - [InjectionToken](#injectiontoken)
   - [API](#api)
     - [Injectable](#injectable-1)
-      - [Injectable.provides](#injectableprovides)
+      - [Injectable.provide](#injectableprovides)
       - [Injectable.inject](#injectableinject)
     - [InjectionToken](#injectiontoken-1)
 
@@ -35,11 +35,11 @@ Next, we register the injectable with the injector on a specific node. It is bes
 
 ```php
 # Option 1:
-var my_injectable := Injectable.provides(MyInjectable, self, 1)
+var my_injectable := Injectable.provide(MyInjectable, self, 1)
 
 # Option 2:
 func _enter_tree():
-  Injectable.provides(MyInjectable, self, 1)
+  Injectable.provide(MyInjectable, self, 1)
 ```
 
 Lastly we get the value on a child node that we want to use this for (this can be at any depth, as it does not have to be a direct child). This can be done in the `_ready` function or with `@onready`.
@@ -74,11 +74,11 @@ Next, we register the token with the injector on a specific node. It is best to 
 @export var bullets: Node2D
 
 # Option 1:
-var my_token := InjectionToken.provides(Tokens.MyToken, self, bullets)
+var my_token := InjectionToken.provide(Tokens.MyToken, self, bullets)
 
 # Option 2:
 func _enter_tree():
-  Injectable.provides(Tokens.MyToken, self, bullets)
+  Injectable.provide(Tokens.MyToken, self, bullets)
 ```
 
 Lastly we get the value on a child node that we want to use this for (this can be at any depth, as it does not have to be a direct child). This can be done in the `_ready` function or with `@onready`
@@ -106,7 +106,7 @@ An `Injectable` is a class that will be created by the injector. It is defined b
 class_name MyInjectable extends Injectable
 ```
 
-#### Injectable.provides
+#### Injectable.provide
 
 This function registers an `Injectable` or `InjectionToken` with the injector.
 
@@ -120,16 +120,16 @@ This function registers an `Injectable` or `InjectionToken` with the injector.
 
 ```php
 # Injectable
-Injectable.provides(MyInjectable1, self, [1, 2, 3])
-Injectable.provides(MyInjectable2, self, "Example")
+Injectable.provide(MyInjectable1, self, [1, 2, 3])
+Injectable.provide(MyInjectable2, self, "Example")
 
 # InjectionToken
-Injectable.provides(Tokens.MyToken1, self, 1)
-Injectable.provides(Tokens.MyToken2, self, node_ref)
+Injectable.provide(Tokens.MyToken1, self, 1)
+Injectable.provide(Tokens.MyToken2, self, node_ref)
 
 # String
-Injectable.provides("custom_string", self)
-Injectable.provides("custom_string", self, "Example")
+Injectable.provide("custom_string", self)
+Injectable.provide("custom_string", self, "Example")
 ```
 
 #### Injectable.inject
