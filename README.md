@@ -58,7 +58,7 @@ func _ready():
 
 ### InjectionToken
 
-Another way is to use an `InjectionToken`. This is useful if you want to inject a value that is not a class that extends `Injectable`.
+Another way is to use an `InjectionToken`. This is useful if you want to inject a value that is not a class that extends `Injectable`. An injection token can be either a `string` or or an instance of `InjectionToken`.
 
 A good place to put these tokens is in an `Autoload` script. However, these could also be put in a node as a `static var`.
 
@@ -126,6 +126,10 @@ Injectable.provides(MyInjectable2, self, "Example")
 # InjectionToken
 Injectable.provides(Tokens.MyToken1, self, 1)
 Injectable.provides(Tokens.MyToken2, self, node_ref)
+
+# String
+Injectable.provides("custom_string", self)
+Injectable.provides("custom_string", self, "Example")
 ```
 
 #### Injectable.inject
@@ -149,6 +153,9 @@ This function finds the `Injectable` or `InjectionToken` that was registered wit
 @onready var my_token1: Node2D = Injectable.inject(Tokens.MyToken1, self)
 @onready var my_token2: int = Injectable.inject(Tokens.MyToken2, self)
 @onready var array: Array = Injectable.inject(Tokens.MyToken1, self, true)
+
+# String
+@onready var custom_string = Injectable.inject("custom_string", self)
 ```
 
 ### InjectionToken
