@@ -1,16 +1,72 @@
+- [Introduction to Services and Dependency Injection](#introduction-to-services-and-dependency-injection)
 - [Godot Dependency Injection](#godot-dependency-injection)
   - [Usage](#usage)
     - [Injectable](#injectable)
     - [InjectionToken](#injectiontoken)
   - [API](#api)
     - [Injectable](#injectable-1)
-      - [Injectable.provide](#injectableprovides)
+      - [Injectable.provide](#injectableprovide)
       - [Injectable.inject](#injectableinject)
     - [InjectionToken](#injectiontoken-1)
+
+# Introduction to Services and Dependency Injection
+
+_Service_ is a broad category encompassing any value, function, or feature that an games needs. A service is typically a class with a narrow, well-defined purpose. It should do something specific and do it well.
+
+Ideally, a scene scripts's job is to enable only the user experience. A scene script should present properties and methods for data binding to mediate between the view and the game logic. The view is what the scene renders and the game logic is what includes the notion of a model.
+
+A scene script should use services for tasks that don't involve the scene or scene script logic. Services are good for tasks such as fetching data from the server, validating user input, or logging directly to the console. By defining such processing tasks in an injectable service class, you make those tasks available to any component. You can also make your game more adaptable by injecting different providers of the same kind of service, as appropriate in different circumstances.
 
 # Godot Dependency Injection
 
 This is a simple dependency injection system for Godot. It is designed to be simple to use and easy to understand.
+
+1. Add the `injector.gd` script to your autoloads.
+2. Provide a class or value to the injector.
+3. Inject the class or value from the injector.
+
+Once you provide a value to a node, it and all of it's children will have access to it!
+
+```php
+# A class to hold the stats of a player or enemy.
+class_name Stats extends Injectable
+
+var health := 100
+var attack := 100
+
+func receive_damage(damage: int):
+  health -= damage
+```
+
+```php
+# player.gd
+@onready var player_stats: Stats = Injector.inject(Stats)
+
+func _enter_tree():
+  Injector.provide(Stats)
+
+func _process():
+  if player_stats.health <= 0:
+    print("Game Over!")
+    get_tree().reload_current_scene()
+```
+
+```php
+# enemy.gd
+@exports var attack_box: Area2D
+
+@onready var player_stats: Stats = Injector.inject(Stats)
+@onready var enemy_stats: Stats = Injector.inject(Stats, self)
+
+func _enter_tree():
+  Injector.provide(Stats, self)
+
+func _ready():
+  attack_box.area_entered.connect(_on_attack_box_area_entered)
+
+func _on_attack_box_area_entered(area: Area2D):
+  player_stats.receive_damage(enemy_stats.attack)
+```
 
 ## Usage
 

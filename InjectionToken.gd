@@ -1,3 +1,4 @@
+## A token that can be used in a DI Provider.
 class_name InjectionToken
 
 var token_name: String
