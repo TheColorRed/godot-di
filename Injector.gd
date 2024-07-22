@@ -232,8 +232,6 @@ func _clear_injectable(injectable: Variant) -> void:
 			injectable.value._destroy()
 		injectable.clear()
 	elif injectable is Injectable:
-		if injectable is PlayerService:
-			print('here')
 		if injectable.has_method('_destroy'):
 			injectable._destroy()
 
