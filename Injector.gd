@@ -11,12 +11,11 @@ var META_INJECTED_NAME: String = '__injected__'
 ## A list of nodes that have injectables.
 var nodes_with_injectables: Array = []
 
-
 ## Provides an injectable to a node and it's children.
 ## * [type] &ndash; is the injectable class to provide. This can be an instance of Injectable or InjectionToken.
 ## * [source] &ndash; is the node to add the provider data to. This usually is set to [self] but can be any node.
 ## * [parameters] &ndash; is an array of parameters to pass to the Injectable's constructor. If the [type] is an InjectionToken, this is the value to inject, such as a [Node], [String], [Int], etc.
-func provide(type: Variant, source: Variant = 'root', parameters: Variant = null) -> Variant:
+func provide(type: Variant, source: Variant='root', parameters: Variant=null) -> Variant:
 	var klass: Variant
 
 	# When we add a new provider, we will set up a signal to clear the injectables when the scene is exited if one doesn't already exist.
@@ -37,7 +36,7 @@ func provide(type: Variant, source: Variant = 'root', parameters: Variant = null
 	var inj: Variant = parameters
 	# If the type is an InjectionToken or string, create a dictionary with the type and value.
 	if type is InjectionToken or type is String:
-		if(typeof(parameters) == TYPE_OBJECT and !(parameters is Node)):
+		if (typeof(parameters) == TYPE_OBJECT and !(parameters is Node)):
 			var i = _create_injectable(parameters, source, null)
 			if i is Injectable:
 				inj = i
@@ -46,12 +45,11 @@ func provide(type: Variant, source: Variant = 'root', parameters: Variant = null
 		inj = _create_injectable(type, source, parameters)
 
 	klass = Dictionary({
-		type = type,
-		value = inj,
-		source = source,
-		provided_in = inj.provided_in if inj is Injectable else '',
+		type=type,
+		value=inj,
+		source=source,
+		provided_in=inj.provided_in if inj is Injectable else '',
 	})
-
 
 	# If the type is not an instance of Injectable, InjectionToken, or String, return null.
 	if !is_instance_of(klass.value, Injectable) and !is_instance_of(type, InjectionToken) and !(type is String):
@@ -77,13 +75,12 @@ func provide(type: Variant, source: Variant = 'root', parameters: Variant = null
 	# Otherwise, return the injectable.
 	# return klass
 
-
 ## Gets an injectable or a node.
 ## [b]Note:[/b] It is not advised to use this function in [_process] or [_physics_process].
 ## * [type] &ndash; is the injectable class to inject into the node.
 ## * [source] &ndash; is the node to start looking for the injectable. This usually is set to [self].
 ## * [multi] &ndash; is a boolean that determines if multiple injectables should be returned. This climbs all the way to the top of the node tree and returns an array of all the injectables that were found.
-func inject(type: Variant, source: Variant = 'root', multi = false) -> Variant:
+func inject(type: Variant, source: Variant='root', multi=false) -> Variant:
 	# If the type is a Injectable, check if the node can be automatically injected into the root.
 	if not type is InjectionToken and not type is String:
 		if source is String and source == 'root':
@@ -96,7 +93,6 @@ func inject(type: Variant, source: Variant = 'root', multi = false) -> Variant:
 				return provide(type, 'root')
 	return _find_injectable(type, source, multi)
 
-
 ## Clears one or all nodes of their injectables.
 ## Nodes referencing the injectables will start to return null.
 ## You can call `Injector.clear('all')` before you change scenes to clear all injectables.
@@ -105,7 +101,7 @@ func inject(type: Variant, source: Variant = 'root', multi = false) -> Variant:
 ##		* If [source] &ndash; is 'all', it will clear the injectables from all nodes.
 ##		* If [source] &ndash; is a node, it will clear the injectables from that node.
 ## * [protect] &ndash; is an array of nodes to protect from being cleared. This is useful if you want to clear all injectables from a node and it's children but want to protect a few nodes from being cleared.
-func clear(source: Variant = 'all', protect: Array = []) -> void:
+func clear(source: Variant='all', protect: Array=[]) -> void:
 	if source is String and source == 'root':
 		source = get_tree().root
 	if source is String and source == 'all':
@@ -127,7 +123,6 @@ func clear(source: Variant = 'all', protect: Array = []) -> void:
 						nodes_with_injectables.erase(node)
 						node.set_meta(META_INJECTABLES_NAME, [])
 
-
 ## Removes an injectable from a node.
 ## * [source] &ndash; is the node to remove the injectable from.
 ## * [injectable] &ndash; is the injectable to remove. This can be any valid injectable data type.
@@ -146,15 +141,13 @@ func remove(source: Node, injectable: Variant) -> void:
 				meta.erase(item)
 		source.set_meta(META_INJECTABLES_NAME, meta)
 
-
 func injectables(source: Node) -> Array:
 	if nodes_with_injectables.has(source):
 		return source.get_meta(META_INJECTABLES_NAME, [])
 	return []
 
-
 ## Gets all injectables that are children of a node.
-func injectable_children(type: Variant, source: Variant = 'root') -> Array:
+func injectable_children(type: Variant, source: Variant='root') -> Array:
 	var items := []
 	if source is String and source == 'root':
 		source = get_tree().root
@@ -170,18 +163,16 @@ func injectable_children(type: Variant, source: Variant = 'root') -> Array:
 					items.append(item)
 	return items
 
-
 ## Similar to [inject] but does not create an injectable if one is not found.
-func closest(type: Variant, source: Variant = 'root', multi = false) -> Variant:
+func closest(type: Variant, source: Variant='root', multi=false) -> Variant:
 	return _find_injectable(type, source, multi)
-
 
 ## Finds an injectable and recursively climbs up the node tree until it finds it.
 ## * [type] &ndash; is the injectable to find. This can be any valid injectable data type.
 ## * [source] &ndash; is the node to start looking for the injectable. Defaults to 'root' which starts at the root node.
 ## * [multi] &ndash; is a boolean that determines if multiple injectables should be returned. This climbs all the way to the top of the node tree and returns an array of all the injectables that were found.
 ## * [multiple] &ndash; is an array that is used internally to store the injectables that were found if [multi] is true.
-func _find_injectable(type: Variant, source: Variant, multi: bool, multiple: Array = []) -> Variant:
+func _find_injectable(type: Variant, source: Variant, multi: bool, multiple: Array=[]) -> Variant:
 	if source is String and source == 'root':
 		source = get_tree().root
 	var meta: Array = source.get_meta(META_INJECTABLES_NAME, [])
@@ -223,7 +214,6 @@ func _find_injectable(type: Variant, source: Variant, multi: bool, multiple: Arr
 	# If we still haven't found the injectable, return null.
 	return null
 
-
 ## Clears an injectable by setting it to null, the garbage collector will take care of the rest.
 ## * [injectable] &ndash; is the injectable to clear.
 func _clear_injectable(injectable: Variant) -> void:
@@ -232,11 +222,8 @@ func _clear_injectable(injectable: Variant) -> void:
 			injectable.value._destroy()
 		injectable.clear()
 	elif injectable is Injectable:
-		if injectable is PlayerService:
-			print('here')
 		if injectable.has_method('_destroy'):
 			injectable._destroy()
-
 
 ## Checks if a node is a descendant of another node.
 ## * [node] &ndash; is the node to check.
@@ -248,18 +235,19 @@ func _is_descendant_of(node: Node, parent: Node) -> bool:
 		return false
 	return _is_descendant_of(node.get_parent(), parent)
 
-
 ## Clears all injectables when the scene is exited.
 func _on_tree_exiting():
 	clear('all')
-
 
 ## Creates an injectable.
 ## * [type] &ndash; is the injectable class to create. This can be an instance of Injectable or InjectionToken.
 ## * [source] &ndash; is the node to add the provider data to. This usually is set to [self] but can be any node.
 ## * [parameters] &ndash; is an array of parameters to pass to the Injectable's constructor. If the [type] is an InjectionToken, this is the value to inject, such as a [Node], [String], [Int], etc.
-func _create_injectable(type: Variant, source: Node, parameters: Variant = null) -> Injectable:
-	var klass := type.call('new') as Injectable
+func _create_injectable(type: Variant, source: Node, parameters: Variant=null) -> Injectable:
+	if not parameters is Array and parameters != null:
+		parameters = [parameters]
+
+	var klass := type.callv('new', parameters) as Injectable
 	if klass is Injectable:
 		if parameters is Dictionary:
 			for key in parameters:
@@ -267,14 +255,12 @@ func _create_injectable(type: Variant, source: Node, parameters: Variant = null)
 		klass.node_ref = source
 	return klass
 
-
 ## Checks if a type is injectable.
 ## * [type] &ndash; is the type to check.
 func _is_injectable(type: Variant) -> bool:
 	if is_instance_of(type, Injectable) or is_instance_of(type, InjectionToken) or type is String:
 		return true
 	return false
-
 
 func _node_has_injectable(node: Node, injectable: Variant) -> bool:
 	var meta = node.get_meta(META_INJECTABLES_NAME, [])

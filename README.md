@@ -71,8 +71,9 @@ func _on_attack_box_area_entered(area: Area2D):
 ## Usage
 
 There are two types of dependencies: Injectable and InjectionToken.
-* Injectable: A class that will be created by the injector.
-* InjectionToken: A token that can be used to inject a value.
+
+- Injectable: A class that will be created by the injector.
+- InjectionToken: A token that can be used to inject a value.
 
 ### Injectable
 
@@ -168,11 +169,11 @@ This function registers an `Injectable` or `InjectionToken` with the injector.
 
 **Returns:** The `Injectable` instance or `InjectionToken` value that was registered with the injector. If nothing was registered, `null` is returned (this often happens when the wrong type is passed in).
 
-| Argument | Type | Description | Required |
-| --- | --- | --- | --- |
-| `type` | `Injectable` or `InjectionToken` | The type of the injectable. | `true` |
-| `source` | `Node` or `"root"` | The node in which to start the search up the tree. Defaults to `"root"`. | `false
-| `parameters` | `Array` or `Variant` | An array of parameters to pass to the `Injectable` (an array is only needed for 2 or more parameters) or a value for an `InjectionToken`. Defaults to `null`. | `false` |
+| Argument     | Type                             | Description                                                                                                                                                   | Required |
+| ------------ | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| `type`       | `Injectable` or `InjectionToken` | The type of the injectable.                                                                                                                                   | `true`   |
+| `source`     | `Node` or `"root"`               | The node in which to start the search up the tree. Defaults to `"root"`.                                                                                      | `false   |
+| `parameters` | `Array` or `Variant`             | An array of parameters to pass to the `Injectable` (an array is only needed for 2 or more parameters) or a value for an `InjectionToken`. Defaults to `null`. | `false`  |
 
 ```php
 # Injectable
@@ -194,11 +195,11 @@ This function finds the `Injectable` or `InjectionToken` that was registered wit
 
 **Returns:** The `Injectable` or `InjectionToken` that was registered with the injector. If nothing was found, `null` is returned.
 
-| Argument | Type | Description | Required |
-| --- | --- | --- | --- |
-| `type` | `Injectable` or `InjectionToken` | The type of the injectable. | `true` |
-| `source` | `Node` or `"root"` | The node in which to start the search up the tree. Defaults to `"root"`. | `false` |
-| `multi` | `bool` | If true, an array of all injectables found will be returned. Defaults to `false`. | `false` |
+| Argument | Type                             | Description                                                                       | Required |
+| -------- | -------------------------------- | --------------------------------------------------------------------------------- | -------- |
+| `type`   | `Injectable` or `InjectionToken` | The type of the injectable.                                                       | `true`   |
+| `source` | `Node` or `"root"`               | The node in which to start the search up the tree. Defaults to `"root"`.          | `false`  |
+| `multi`  | `bool`                           | If true, an array of all injectables found will be returned. Defaults to `false`. | `false`  |
 
 ```php
 # Injectable
@@ -218,9 +219,9 @@ This function finds the `Injectable` or `InjectionToken` that was registered wit
 
 An `InjectionToken` is a token that can be used to create a value that is not a class that extends `Injectable`. Such as a `Node`, `int`, `Array`, etc. It is defined by creating a new instance of the `InjectionToken` class.
 
-| Argument | Type | Description | Required |
-| --- | --- | --- | --- |
-| `name` | `String` | The name of the token. | `true` |
+| Argument | Type     | Description            | Required |
+| -------- | -------- | ---------------------- | -------- |
+| `name`   | `String` | The name of the token. | `true`   |
 
 These tokens can be placed where ever you see fit. An `Autoload` script is a good place to put them for access throughout the project. They can also be placed in a node as a `static var`.
 
