@@ -8,6 +8,11 @@
       - [Injectable.provide](#injectableprovide)
       - [Injectable.inject](#injectableinject)
     - [InjectionToken](#injectiontoken-1)
+  - [Included Services](#included-services)
+    - [Game Ref](#game-ref)
+      - [Usage](#usage-1)
+    - [Node Ref](#node-ref)
+      - [Usage](#usage-2)
 
 # Introduction to Services and Dependency Injection
 
@@ -131,7 +136,7 @@ Next, we register the token with the injector on a specific node. It is best to 
 @export var bullets: Node2D
 
 # Option 1:
-var my_token := InjectionToken.provide(Tokens.MyToken, self, bullets)
+var my_token := Injectable.provide(Tokens.MyToken, self, bullets)
 
 # Option 2:
 func _enter_tree():
@@ -142,11 +147,11 @@ Lastly we get the value on a child node that we want to use this for (this can b
 
 ```php
 # Option 1:
-@onready var bullets: Node2D = InjectionToken.inject(Tokens.MyToken, self)
+@onready var bullets: Node2D = Injectable.inject(Tokens.MyToken, self)
 
 # Option 2:
 func _ready():
-  var bullets: Node2D = InjectionToken.inject(Tokens.MyToken, self)
+  var bullets: Node2D = Injectable.inject(Tokens.MyToken, self)
 
   # After using option 1 or 2, we can now do this:
   var bullet := preload("res://Bullet.tscn").instantiate()
@@ -233,4 +238,43 @@ var MyToken = InjectionToken.new("MyToken")
 
 # MyNode.gd (as a static var)
 static var MyToken = InjectionToken.new("MyToken")
+```
+
+## Included Services
+
+### Game Ref
+
+This service provides a reference to the `Window` or to the `SceneTree` depending on what you would like.
+
+#### Usage
+
+```php
+@onready var game_ref: GameRef = Injector.inject(GameRef)
+
+func _ready():
+  print(game_ref.root)
+  print(game_ref.tree)
+```
+
+### Node Ref
+
+This service provides a reference to a node in the scene tree.
+
+#### Usage
+
+```php
+# enemy.gd
+class_name Enemy extends Area2D
+
+func _enter_tree():
+  Injector.provide(NodeRef, self, self)
+```
+
+```php
+# player.gd
+class_name Player extends Node2D
+
+func _on_enemy_entered(area: Area2D):
+  var enemy = Injector.inject(NodeRef, area)
+  self.queue_free()
 ```

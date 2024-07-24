@@ -7,7 +7,6 @@ func _init():
 var root: Window:
 	get: return Engine.get_main_loop().get_root()
 
-
 ## Gets the game's scene tree.
 var tree: SceneTree:
 	get: return root.get_tree()
